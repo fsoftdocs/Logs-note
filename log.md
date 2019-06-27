@@ -83,7 +83,114 @@ Hai khái niệm xoay quanh syslog :
 - Syslog : Giao thức dùng để xử lý file log trong Linux.
 - Rsyslog : Dịch vụ sử dụng Syslog
 
-##### b, Phân tích cấu hình của syslog
+##### b, Các cách đọc log cơ bản 
+
+
+|Câu lệnh | Cú pháp |Ý nghĩa | Ghi chú thêm |
+|---------|---------|--------|--------------|
+|more | more [file] | Dùng xem toàn bộ nội dung của thư muc | Đối với câu lênh này nôi dung được xem theo từng trang. Bạn dung dấu "cách" để chuyển  trang |
+|tail | tail [file] | In ra 10 dòng cuối cùng nội dung của file | thêm tùy chọn -n [số dòng] sẽ in ra số dòng theo yêu cầu , các log mới sinh ra cũng sẽ tự động hiện trên màn hình cho đến khi bạn dừng lại |
+|head | head [file] | In ra 10 dòng đầu tiên của nôi dụng file |
+|tail -f | tail -f [file] | Dùng để xem ngay lâp tức khi có log đến | Đây là câu lệnh dùng phổ biến nhất nó giúp ta có thể xem ngay lập tức log mới đến, và nó sẽ in ra 10 dong cuối cùng trong nội dung file đó |
+| cat | cat [file] | dùng để xem tất cả các log được lưu trong một file | Có thể dùng thêm với grep để tìm kiếm theo ý muốn ( giả sử như muốn tìm log liên quan đến user : root)|
+
+##### Thực hành đọc một vài file log cơ bản .
+
+
+
+##### b,1 : Dùng tail -f để cem file log  realtime ( các log sẽ hiện trực tiếp lên màn hình )
+
+> tail -f /var/log/messages
+
+```
+[root@localhost ~]# tail -f /var/log/messages
+Jun 27 09:48:19 localhost systemd: Started Session 255 of user root.
+Jun 27 09:48:19 localhost systemd-logind: New session 255 of user root.
+Jun 27 09:48:19 localhost systemd: Started Session 256 of user root.
+Jun 27 09:48:19 localhost systemd-logind: New session 256 of user root.
+Jun 27 09:51:00 localhost systemd-logind: Removed session 255.
+Jun 27 09:51:01 localhost systemd-logind: Removed session 256.
+Jun 27 09:52:15 localhost systemd: Started Session 257 of user root.
+Jun 27 09:52:15 localhost systemd-logind: New session 257 of user root.
+Jun 27 09:52:16 localhost systemd: Started Session 258 of user root.
+Jun 27 09:52:16 localhost systemd-logind: New session 258 of user root.
+Jun 27 09:53:01 localhost systemd: Started Session 259 of user root.
+Jun 27 09:53:01 localhost systemd-logind: New session 259 of user root.
+Jun 27 09:53:32 localhost systemd: Stopping LSB: Bring up/down networking...
+Jun 27 09:53:32 localhost NetworkManager[2765]: <info>  [1561604012.7022] device (eth0): state change: activated -> deactivating (reason 'user-requested', sys-iface-state: 'managed')
+Jun 27 09:53:32 localhost NetworkManager[2765]: <info>  [1561604012.7027] manager: NetworkManager state is now DISCONNECTING
+Jun 27 09:53:32 localhost NetworkManager[2765]: <info>  [1561604012.7335] audit: op="device-disconnect" interface="eth0" ifindex=2 pid=2520 uid=0 result="success"
+Jun 27 09:53:32 localhost systemd: Starting Network Manager Script Dispatcher Service...
+Jun 27 09:53:32 localhost NetworkManager[2765]: <info>  [1561604012.7336] device (eth0): state change: deactivating -> disconnected (reason 'user-requested', sys-iface-state: 'managed')
+Jun 27 09:53:32 localhost dbus[2694]: [system] Activating via systemd: service name='org.freedesktop.nm_dispatcher' unit='dbus-org.freedesktop.nm-dispatcher.service'
+Jun 27 09:53:32 localhost NetworkManager[2765]: <info>  [1561604012.7702] dhcp4 (eth0): canceled DHCP transaction, DHCP client pid 3063
+Jun 27 09:53:32 localhost NetworkManager[2765]: <info>  [1561604012.7703] dhcp4 (eth0): state changed bound -> done
+Jun 27 09:53:32 localhost dbus[2694]: [system] Successfully activated service 'org.freedesktop.nm_dispatcher'
+Jun 27 09:53:32 localhost systemd: Started Network Manager Script Dispatcher Service.
+Jun 27 09:53:32 localhost nm-dispatcher: req:1 'connectivity-change': new request (3 scripts)
+Jun 27 09:53:32 localhost nm-dispatcher: req:1 'connectivity-change': start running ordered scripts...
+Jun 27 09:53:32 localhost NetworkManager[2765]: <info>  [1561604012.8000] manager: NetworkManager state is now DISCONNECTED
+Jun 27 09:53:32 localhost nm-dispatcher: req:2 'down' [eth0]: new request (3 scripts)
+Jun 27 09:53:32 localhost network: Shutting down interface eth0:  Device 'eth0' successfully disconnected.
+Jun 27 09:53:32 localhost network: [  OK  ]
+Jun 27 09:53:32 localhost chronyd[2700]: Source 10.16.164.13 offline
+Jun 27 09:53:32 localhost chronyd[2700]: Source 10.16.164.14 offline
+Jun 27 09:53:32 localhost chronyd[2700]: Source 10.16.34.13 offline
+Jun 27 09:53:32 localhost chronyd[2700]: Source 10.16.34.14 offline
+Jun 27 09:53:32 localhost chronyd[2700]: Source 103.97.125.133 offline
+Jun 27 09:53:32 localhost chronyd[2700]: Source 113.161.84.122 offline
+Jun 27 09:53:32 localhost chronyd[2700]: Source 210.245.100.39 offline
+Jun 27 09:53:32 localhost chronyd[2700]: Source 113.161.227.40 offline
+Jun 27 09:53:32 localhost chronyd[2700]: Can't synchronise: no selectable sources
+Jun 27 09:53:32 localhost nm-dispatcher: req:2 'down' [eth0]: start running ordered scripts...
+Jun 27 09:53:32 localhost network: Shutting down loopback interface:  [  OK  ]
+Jun 27 09:53:33 localhost systemd: Stopped LSB: Bring up/down networking.
+Jun 27 09:53:33 localhost systemd: Starting LSB: Bring up/down networking...
+Jun 27 09:53:33 localhost NetworkManager[2765]: <info>  [1561604013.1530] device (lo): carrier: link connected
+Jun 27 09:53:33 localhost network: Bringing up loopback interface:  [  OK  ]
+
+
+```
+##### Phân tích cơ bản vài dòng log ( khi thực hiện tail mình đồng thời thực hiện restart network và cũng có xem được  vài dòng log cơ bản ):
+
+- **1** . Các Interface bị shutdown
+
+`Jun 27 09:53:32 localhost network: Shutting down interface eth0:  Device 'eth0' successfully disconnected.`
+
+- **2** . Dịch vụ networking bị tắt đi.
+
+`Jun 27 09:53:33 localhost systemd: Stopped LSB: Bring up/down networking.`
+
+- **3** . Dịch vụ networking được bật lên .
+
+`Jun 27 09:53:33 localhost systemd: Stopped LSB: Bring up/down networking.`
+
+##### b.2 : Đọc log về login -logout (file /var/log/wtmp)
+
+File ` wtmp ` là file log ghi lại lịch sử đăng nhập và đăng suất của hệ thống nhưng do cấu hình file đăng biệt nên k để đọc theo các câu lệnh bình thường nên ở đây mình dùng cách khác để đọc đó là dùng ` utmpdump ` 
+
+
+>  utmpdump /var/log/wtmp
+
+```
+[7] [02339] [ts/0] [root    ] [pts/0       ] [10.17.58.228        ] [10.17.58.228   ] [Thu Jun 27 09:48:20 2019 +07]
+[8] [02322] [    ] [        ] [pts/0       ] [                    ] [0.0.0.0        ] [Thu Jun 27 09:51:00 2019 +07]
+[7] [02437] [ts/0] [root    ] [pts/0       ] [10.17.58.228        ] [10.17.58.228   ] [Thu Jun 27 09:52:16 2019 +07]
+[7] [02459] [ts/1] [root    ] [pts/1       ] [172.27.100.15       ] [172.27.100.15  ] [Thu Jun 27 09:53:01 2019 +07]
+
+```
+
+có hai định dang log khác nhau ở  chuỗi log bên trên cụ thể là 
+
+` [8] [02322] [    ] [        ] [pts/0       ] [                    ] [0.0.0.0        ] [Thu Jun 27 09:51:00 2019 +07] `
+là định dạng của việc logout khỏi hệ thống .
+
+`[7] [02459] [ts/1] [root    ] [pts/1       ] [172.27.100.15       ] [172.27.100.15  ] [Thu Jun 27 09:53:01 2019 +07] ` là định dạng có người dùng  `root `login vào hệ thống  dưới ip : `172.27.100.15 ` ( còn một vài thông tin  khác do hiểu biết hạn hẹp nên chưa kịp thời xác định được cụ thể )
+
+
+
+
+##### c, Phân tích cấu hình của syslog
 
 ##### File cấu hình syslog :
 
