@@ -1,14 +1,14 @@
 ## Log
-
-#### 1. Khái niệm về Log
+<a name="khainiem-log"></a>
+### 1. Khái niệm về Log
 
 - Log là một quá trình ghi lại những thông tin được thông báo, lưu lại trong quá trình hoạt động của một ứng dụng ở một nơi tập trung. Mục đích chính là để có thể xem lại các thông tin hoạt động của ứng dụng trong quá khứ như debug khi có lỗi xảy ra, check health, xem info, error, warning,…
 - Log file thường là các file văn bản thông thường dưới dạng “clear text” tức là bạn có thể dễ dàng đọc được nó, vì thế có thể sử dụng các trình soạn thảo văn bản (vi, vim, nano...) hoặc các trình xem văn bản thông thường (cat, tailf, head...) là có thể xem được file log.
 - Các log được lưu lại tại ` /var/log ` .
   
  ==> Log giúp bạn theo dõi và giải quyết vấn đề về hệ thống của bạn .
-
- #### 2. Cau truc cua dong log
+<a name="cautruc-log"></a>
+ ### 2. Cau truc cua dong log
 
  ` Jun 25 04:32:33 localhost systemd-logind: New session 203 of user root. `
 
@@ -41,8 +41,8 @@
 - /var/log/wtmp  : Ghi log đăng nhập
 
 - /var/log/yum.log: Các log của Yum
-
-#### 3. Phân loại các log ( LOG level )
+<a name="phanloai-log"></a>
+### 3. Phân loại các log ( LOG level )
 
 Các level để phân loại log : 
 
@@ -56,10 +56,10 @@ Các level để phân loại log :
 
 
 
-
-#### 4. Syslog trong Linux
-
-##### a, syslog là gì ?
+<a name="syslog"></a>
+### 4. Syslog trong Linux
+<a name="syslog-lagi"></a>
+#### a, syslog là gì ?
 Syslog là một giao thức dùng để xử lý các file log Linux. Các file log có thể được lưu tại chính máy Linux đó, hoặc có thể di chuyển và lưu tại 1 máy khác.
 
 ##### Ứng dụng của syslog :
@@ -82,8 +82,8 @@ Syslog là một giao thức, và được sử dụng bới dịch vụ Rsyslog
 Hai khái niệm xoay quanh syslog :
 - Syslog : Giao thức dùng để xử lý file log trong Linux.
 - Rsyslog : Dịch vụ sử dụng Syslog
-
-##### b, Các cách đọc log cơ bản 
+<a name="syslog-use"></a>
+#### b, Các cách đọc log cơ bản 
 
 
 |Câu lệnh | Cú pháp |Ý nghĩa | Ghi chú thêm |
@@ -189,8 +189,8 @@ là định dạng của việc logout khỏi hệ thống .
 
 
 
-
-##### c, Phân tích cấu hình của syslog
+<a name="syslog-analyst"></a>
+#### c, Phân tích cấu hình của syslog
 
 ##### File cấu hình syslog :
 
@@ -351,6 +351,111 @@ Ví dụ tùy chỉnh việc lưu log với từng mức cảnh báo với dịc
 - lưu lại tất cả, ngoài trừ các log INFO:
 ` mail.!info         /var/log/mail `
 
+
+<a name="logserver"></a>
+#### d, Log tập trung ( Log server )
+
+##### log tập trung là gì?
+ Giống như tên gọi ` log tập trung ` là nơi lưu trữ các file log mà nguồn của các file nằm ở  nhiều nơi khác nhau ` (  giả sử như Mail Server hay Web server mỗi chương trình đều sinh ra log mà mặc định log sẽ được lưu ở máy local nhưng khi sử dụng log tập trung thì các file log sẽ được gửi lên một server chỉ để dành riêng để lưu trữ log mà thôi ) `
+
+##### Tại sao lại cần đến log tập trung ?
+
+- Do có nhiều nguồn sinh log
+
+    - Có nhiều nguồn sinh ra log, log nằm trên nhiều máy chủ khác nhau nên khó quản lý.
+    - Nội dung log không đồng nhất (Giả sử log từ nguồn 1 có có ghi thông tin về ip mà không ghi thông tin về user name đăng nhập mà log từ nguồn 2 lại có) -> khó khăn trong việc kết hợp các log với nhau để xử lý vấn đề gặp phải.
+    - Định dạng log cũng không đồng nhất -> khó khăn trong việc chuẩn hóa
+    - Đảm bảo tính toàn vẹn, bí mật, sẵn sàng của log.
+- Do có nhiều các rootkit được thiết kế để xóa bỏ logs.
+- Do log mới được ghi đè lên log cũ -> Log phải được lưu trữ ở một nơi an toàn và phải có kênh truyền đủ đảm bảo tính an toàn và sẵn sàng sử dụng để phân tích hệ thống.
+
+
+##### Tác dụng của log tập trung :
+
+- Giúp quản trị viên có cái nhìn chi tiết về hệ thống -> có định hướng tốt hơn về hướng giải quyết
+- Mọi hoạt động của hệ thống được ghi lại và lưu trữ ở một nơi an toàn (log server) -> đảm bảo tính toàn vẹn phục vụ cho quá trình phân tích điều tra các cuộc tấn công vào hệ thống
+- Log tập trung kết hợp với các ứng dụng thu thập và phân tích log khác nữa giúp cho việc phân tích log trở nên thuận lợi hơn -> giảm thiểu nguồn nhân lực.
+
+###### Thực hành trên syslog server 
+
+Phía máy syslog-server cần chỉnh sửa cấu hình để nhận bản tin log từ các client gửi về :
+
+- Chỉnh sửa nôi dung ở file /etc/rsyslog.conf:
+
+
+```
+# Provides UDP syslog reception
+#$ModLoad imudp
+#$UDPServerRun 514
+
+# Provides TCP syslog reception
+#$ModLoad imtcp
+#$InputTCPServerRun 514
+
+```
+
+chúng ta có thể tùy chọn giao thức TCP hay UDP và gói tin sẽ được nhận ở cổng 514 . Ở đây mình sẽ sử dụng UDP nên sẽ bỏ comment ở hai dòng sau :
+
+```
+$ModLoad imudp
+$UDPServerRun 514
+```
+
+Nếu các máy cứ gửi log lên server thì người quản lý sẽ không biết là log ở nào gửi lên vì thế cần tạo cho các máy client thư mục lưu trữ log riêng và cài đặt trong file cấu hình :
+
+```
+$template TmplAuth,"/var/log/%HOSTNAME%/%PROGRAMNAME%.log"
+*.*     ?TmplAuth
+```
+Các dòng code trên nên được đặt ở trên GLOBAL DIRECTIVES ( cho sau ai mà có lạc vào file này còn hiểu là các modules không là họ thấy lạ lạ không cần thiết nên xóa đi đó )
+
+
+Và cần thêm restart service nữa là hoàn thành những việc cần làm bên server rồi 
+
+```
+systemctl restart rsyslog
+```
+Bây giờ là thực hiện trên syslog client 
+
+chúng ta cũng sẽ thêm chút mắm muối vào file /etc/rsyslog.conf chút thôi :
+
+
+Thêm dòng code sau dưới mục RULES là được :
+```
+*.*             @Syslog_server_IP:514
+```
+
+và đừng quên restart rsyslog nhé 
+
+
+##### Kiểm tra lại trên syslog server 
+
+trong thư mục /var/log/ sẽ xuất hiện thêm một thư mục log của client (với tên là hostname của client nhé )
+
+BEFORE
+```
+[root@localhost ~]# cd /var/log/
+[root@localhost log]# ls
+anaconda  boot.log-20190610  btmp    cron-20190614  dmesg      grubby_prune_debug  localhost         maillog-20190621  messages-20190614  rhsm             secure-20190621  spooler-20190614  tallylog  yum.log
+audit     boot.log-20190613  chrony  cron-20190621  dmesg.old  jenkins             maillog           maillog-20190623  messages-20190621  secure           secure-20190623  spooler-20190621  tuned
+boot.log  boot.log-20190619  cron    cron-20190623  firewalld  lastlog             maillog-20190614  messages          messages-20190623  secure-20190614  spooler          spooler-20190623  wtmp
+
+```
+
+AFTER
+
+```
+[root@localhost log]# ls
+agent3    boot.log-20190610  chrony         cron-20190623  grubby_prune_debug  maillog           messages           rhsm             secure-20190623   spooler-20190623  yum.log
+anaconda  boot.log-20190613  cron           dmesg          jenkins             maillog-20190614  messages-20190614  secure           spooler           tallylog
+audit     boot.log-20190619  cron-20190614  dmesg.old      lastlog             maillog-20190621  messages-20190621  secure-20190614  spooler-20190614  tuned
+boot.log  btmp               cron-20190621  firewalld      localhost           maillog-20190623  messages-20190623  secure-20190621  spooler-20190621  wtmp
+
+```
+
+` hostname ` ở máy client mình có tên là ` agent3 ` nên ở file /var/log đã có thêm file agent3 rồi (như thế là thành công rồi ) 
+
+--- THE END ---
 
 
 
