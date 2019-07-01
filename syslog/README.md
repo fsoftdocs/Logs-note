@@ -1,10 +1,10 @@
 # Syslog
 
-## [1. Syslog ](#syslog)
-### [a, syslog là gì ? ](#syslog-lagi)
-### [b, Cách đọc log cơ bản ](#syslog-ues)
-### [c, Phân tích cấu hình của log ](#syslog-analyst)
-### [d, Log server ](#logserver)
+[1. Syslog ](#syslog)
+- [1.1 syslog là gì ? ](#syslog-lagi)
+- [1.2 Cách đọc log cơ bản ](#syslog-ues)
+- [1.3 Phân tích cấu hình của log ](#syslog-analyst)
+- [1.4 Log server ](#logserver)
 
 <a name="syslog"></a>
 ### 1. Syslog trong Linux
@@ -33,7 +33,7 @@ Hai khái niệm xoay quanh syslog :
 - Syslog : Giao thức dùng để xử lý file log trong Linux.
 - Rsyslog : Dịch vụ sử dụng Syslog
 <a name="syslog-use"></a>
-#### b, Các cách đọc log cơ bản 
+#### b, Các cách đọc log cơ bản
 
 
 |Câu lệnh | Cú pháp |Ý nghĩa | Ghi chú thêm |
@@ -117,7 +117,7 @@ Jun 27 09:53:33 localhost network: Bringing up loopback interface:  [  OK  ]
 
 ##### b.2 : Đọc log về login -logout (file /var/log/wtmp)
 
-File ` wtmp ` là file log ghi lại lịch sử đăng nhập và đăng suất của hệ thống nhưng do cấu hình file đăng biệt nên k để đọc theo các câu lệnh bình thường nên ở đây mình dùng cách khác để đọc đó là dùng ` utmpdump ` 
+File ` wtmp ` là file log ghi lại lịch sử đăng nhập và đăng suất của hệ thống nhưng do cấu hình file đăng biệt nên k để đọc theo các câu lệnh bình thường nên ở đây mình dùng cách khác để đọc đó là dùng ` utmpdump `
 
 
 >  utmpdump /var/log/wtmp
@@ -130,7 +130,7 @@ File ` wtmp ` là file log ghi lại lịch sử đăng nhập và đăng suất
 
 ```
 
-có hai định dang log khác nhau ở  chuỗi log bên trên cụ thể là 
+có hai định dang log khác nhau ở  chuỗi log bên trên cụ thể là
 
 ` [8] [02322] [    ] [        ] [pts/0       ] [                    ] [0.0.0.0        ] [Thu Jun 27 09:51:00 2019 +07] `
 là định dạng của việc logout khỏi hệ thống .
@@ -147,7 +147,7 @@ là định dạng của việc logout khỏi hệ thống .
 - Trong CENTOS, file cấu hình là /etc/rsyslog.conf . File này chứa cả các rule về log
 - Trong UBUNTU file cấu hình là /etc/rsyslog.conf nhưng các rule được định nghĩa riêng trong /etc/rsyslog.d/50-defaul.conf .
 
-> file /etc.rsyslog.conf treong CENTOS 
+> file /etc.rsyslog.conf treong CENTOS
 
 ```
 # rsyslog configuration file
@@ -245,7 +245,7 @@ local7.*                                                /var/log/boot.log
 ```
 
  Có thể nhận biết nơi lưu log của app qua file cấu hình của syslog ( /etc/rsyslog.conf):
- ``` 
+ ```
  # Log all the mail messages in one place.
 mail.*                                                  -/var/log/maillog
 ```
@@ -271,7 +271,7 @@ Cấu hình Syslog như hình trên được chia thành 2 trường:
 |user | Log của đến từ ứng dụng của người dùng |
 |lpr | Log từ hệ thống in ấn |
 |deamon | Log từ các tiến trình chạy trên nền của hệ thống |
-|ftp | Log từ tiến trình ftp | 
+|ftp | Log từ tiến trình ftp |
 |console | 	Log cảnh báo hệ thống |
 |security | Kiểm tra đăng nhập |
 |local 0 -> local 7 | Log dự trữ cho sử dụng nội bộ |
@@ -326,7 +326,7 @@ Ví dụ tùy chỉnh việc lưu log với từng mức cảnh báo với dịc
 - Mọi hoạt động của hệ thống được ghi lại và lưu trữ ở một nơi an toàn (log server) -> đảm bảo tính toàn vẹn phục vụ cho quá trình phân tích điều tra các cuộc tấn công vào hệ thống
 - Log tập trung kết hợp với các ứng dụng thu thập và phân tích log khác nữa giúp cho việc phân tích log trở nên thuận lợi hơn -> giảm thiểu nguồn nhân lực.
 
-###### Thực hành trên syslog server 
+###### Thực hành trên syslog server
 
 Phía máy syslog-server cần chỉnh sửa cấu hình để nhận bản tin log từ các client gửi về :
 
@@ -360,12 +360,12 @@ $template TmplAuth,"/var/log/%HOSTNAME%/%PROGRAMNAME%.log"
 Các dòng code trên nên được đặt ở trên GLOBAL DIRECTIVES ( cho sau ai mà có lạc vào file này còn hiểu là các modules không là họ thấy lạ lạ không cần thiết nên xóa đi đó )
 
 
-Và cần thêm restart service nữa là hoàn thành những việc cần làm bên server rồi 
+Và cần thêm restart service nữa là hoàn thành những việc cần làm bên server rồi
 
 ```
 systemctl restart rsyslog
 ```
-Bây giờ là thực hiện trên syslog client 
+Bây giờ là thực hiện trên syslog client
 
 chúng ta cũng sẽ thêm chút mắm muối vào file /etc/rsyslog.conf chút thôi :
 
@@ -375,10 +375,10 @@ Thêm dòng code sau dưới mục RULES là được :
 *.*             @Syslog_server_IP:514
 ```
 
-và đừng quên restart rsyslog nhé 
+và đừng quên restart rsyslog nhé
 
 
-##### Kiểm tra lại trên syslog server 
+##### Kiểm tra lại trên syslog server
 
 trong thư mục /var/log/ sẽ xuất hiện thêm một thư mục log của client (với tên là hostname của client nhé )
 
@@ -403,7 +403,7 @@ boot.log  btmp               cron-20190621  firewalld      localhost           m
 
 ```
 
-` hostname ` ở máy client mình có tên là ` agent3 ` nên ở file /var/log đã có thêm file agent3 rồi (như thế là thành công rồi ) 
+` hostname ` ở máy client mình có tên là ` agent3 ` nên ở file /var/log đã có thêm file agent3 rồi (như thế là thành công rồi )
 
 
 [Source](https://blog.cloud365.vn/search/?q=Tr%E1%BB%9D+th%C3%A0nh+cao+th%E1%BB%A7+logging)

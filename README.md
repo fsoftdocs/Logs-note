@@ -1,7 +1,5 @@
-# [1.Report about Logs](https://github.com/dhvsplg99999/Logs-note/blob/master/basic_logs)
+## Ghi chép về Logging
 
-# [2. Syslog ](https://github.com/dhvsplg99999/Logs-note/blob/master/syslog)
+[1. Overview Logs](./basic_logs/README.md)
 
-
-
-
+[2. Syslog ](./syslog/README.md)
